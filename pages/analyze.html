@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyze — ScamRadar</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/animations.css">
+<style>
+.analyze-layout { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+.analyze-hero { margin-bottom: 2rem; }
+.analyze-hero h2 { font-family: var(--display); font-size: 26px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+.analyze-hero p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+.input-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.5rem; }
+.input-card-header { padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text2); }
+.analyze-textarea { width: 100%; background: transparent; border: none; color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.7; padding: 1rem 1.25rem; resize: vertical; min-height: 180px; outline: none; }
+.analyze-textarea::placeholder { color: var(--text3); }
+.input-footer { padding: 10px 14px; background: var(--surface2); border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.char-count { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.analyze-btn { background: var(--accent); color: #fff; border: none; padding: 8px 20px; border-radius: var(--radius-sm); font-family: var(--body); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 7px; }
+.analyze-btn:hover:not(:disabled) { background: #ff6644; transform: translateY(-1px); }
+.analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.analyze-spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; display: none; }
+.analyze-btn.loading .analyze-spinner { display: block; animation: spin 0.65s linear infinite; }
+.analyze-btn.loading .analyze-btn-icon { display: none; }
+
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; display: none; }
+.result-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.verdict-badge { font-size: 13px; font-weight: 600; padding: 5px 14px; border-radius: var(--radius-sm); }
+.verdict-scam { background: var(--red-dim); color: var(--red); border: 1px solid rgba(232,64,64,0.25); }
+.verdict-safe { background: var(--green-dim); color: var(--green); border: 1px solid rgba(62,201,122,0.25); }
+.confidence-pill { font-size: 12px; color: var(--text2); background: var(--surface2); border: 1px solid var(--border2); padding: 4px 10px; border-radius: var(--radius-sm); font-family: var(--mono); }
+.scam-type-pill { font-size: 12px; color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(232,160,32,0.2); padding: 4px 10px; border-radius: var(--radius-sm); }
+.result-body { padding: 1.25rem; }
+.result-explanation { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 1.25rem; padding: 12px; background: var(--surface2); border-radius: var(--radius-sm); border-left: 2px solid var(--border2); }
+.result-section-title { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+.result-flags { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem; }
+.result-flag { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text2); padding: 6px 10px; background: var(--surface2); border-radius: var(--radius-sm); border-left: 2px solid var(--red); line-height: 1.5; }
+.result-tactics { display: flex; flex-wrap: wrap; gap: 6px; }
+.result-tactic { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 1px solid var(--border2); color: var(--text2); background: var(--surface2); }
+
+.examples-section { margin-top: 2rem; }
+.examples-title { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+.example-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.example-chip { font-size: 12px; color: var(--text2); background: var(--surface2); border: 1px solid var(--border2); padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.12s; }
+.example-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 13H2L8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="8" y1="6.5" x2="8" y2="9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.7" fill="currentColor"/></svg>
+      </div>
+      <span class="logo-text">ScamRadar</span>
+      <span class="logo-badge">Educational</span>
+    </a>
+    <nav class="nav">
+      <a href="../index.html" class="nav-link">Generator</a>
+      <a href="analyze.html" class="nav-link active">Analyze</a>
+      <a href="library.html" class="nav-link">Library</a>
+      <a href="about.html" class="nav-link">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="analyze-layout">
+  <div class="analyze-hero">
+    <h2>Analyze a Message</h2>
+    <p>Paste any suspicious message — call transcript, SMS, email, or letter — and AI will analyze it for scam indicators, red flags, and manipulation tactics.</p>
+  </div>
+
+  <div class="input-card">
+    <div class="input-card-header">Paste suspicious message below</div>
+    <textarea class="analyze-textarea" id="analyzeInput" placeholder="Paste a suspicious phone call transcript, SMS message, email, or any other suspicious communication here..." oninput="updateCharCount()"></textarea>
+    <div class="input-footer">
+      <span class="char-count" id="charCount">0 characters</span>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="footer-btn" onclick="clearInput()" style="background:var(--surface3);color:var(--text2);border:1px solid var(--border2);padding:7px 12px;border-radius:var(--radius-sm);font-family:var(--body);font-size:12px;cursor:pointer;">Clear</button>
+        <button class="analyze-btn" id="analyzeBtn" onclick="analyzeText()">
+          <svg class="analyze-btn-icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <div class="analyze-spinner"></div>
+          Analyze Message
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-header" id="resultHeader"></div>
+    <div class="result-body" id="resultBody"></div>
+  </div>
+
+  <div class="examples-section">
+    <div class="examples-title">Try with example scam text</div>
+    <div class="example-chips">
+      <div class="example-chip" onclick="loadExample('irs')">IRS threat call</div>
+      <div class="example-chip" onclick="loadExample('bank')">Bank fraud alert</div>
+      <div class="example-chip" onclick="loadExample('lottery')">Prize notification</div>
+      <div class="example-chip" onclick="loadExample('tech')">Tech support alert</div>
+      <div class="example-chip" onclick="loadExample('safe')">Legitimate message</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../config.js"></script>
+<script>
+const EXAMPLES = {
+  irs: `This is a final warning from the IRS Criminal Investigation Division. Your social security number has been suspended due to suspicious activity and fraudulent tax returns. A warrant has been issued for your immediate arrest. You must call us immediately at 1-800-555-0192 to avoid arrest. This is your last chance to resolve this matter. Case number: IRS-2024-CR-78432. Do not ignore this message. Federal agents have been dispatched to your address.`,
+  bank: `URGENT: Your Chase account has been SUSPENDED. Unauthorized access detected from IP 185.220.101.45. Call 1-888-555-0147 IMMEDIATELY to verify your identity and prevent permanent account closure. Your balance of $4,872.33 is at risk. This is time sensitive - you have 2 hours to respond.`,
+  lottery: `CONGRATULATIONS! You have been selected as the winner of the International Microsoft Lottery for $850,000 USD! Your email was randomly selected from 50 million email addresses. To claim your prize, you must pay a processing fee of $299 via Western Union to cover taxes and transfer fees. Contact lottery agent James Wilson at lottery.winner2024@gmail.com with your full name, address, and phone number.`,
+  tech: `CRITICAL ALERT: Your computer has been infected with 5 viruses including Trojan.GenericKD. Your personal data including banking passwords are being stolen RIGHT NOW. Call Microsoft Support immediately: 1-833-555-0188. Do NOT turn off your computer or the viruses will spread. Your Windows license has been suspended.`,
+  safe: `Hi Sarah, this is Dr. Martinez's office calling to confirm your appointment tomorrow at 2:30 PM. If you need to reschedule, please call us at our main number 555-2847 during business hours. We look forward to seeing you. Have a great day!`
+};
+
+function loadExample(key) {
+  document.getElementById('analyzeInput').value = EXAMPLES[key] || '';
+  updateCharCount();
+}
+
+function updateCharCount() {
+  const len = document.getElementById('analyzeInput').value.length;
+  document.getElementById('charCount').textContent = len + ' characters';
+}
+
+function clearInput() {
+  document.getElementById('analyzeInput').value = '';
+  updateCharCount();
+  document.getElementById('resultCard').style.display = 'none';
+}
+
+function escHtml(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function analyzeText() {
+  const text = document.getElementById('analyzeInput').value.trim();
+  if (!text) { showToast('Please paste a message to analyze'); return; }
+
+  const configKey = (typeof CONFIG !== 'undefined' && CONFIG.GROQ_API_KEY && CONFIG.GROQ_API_KEY !== 'your_groq_api_key_here')
+    ? CONFIG.GROQ_API_KEY : '';
+  const key = configKey || sessionStorage.getItem('groq_api_key') || '';
+  if (!key) {
+    showToast('Please set your Groq API key on the Generator page first');
+    return;
+  }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true; btn.classList.add('loading');
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + key
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 700,
+        temperature: 0.3,
+        messages: [
+          { role: 'system', content: 'You are a scam detection expert. Return only valid JSON.' },
+          { role: 'user', content: `Analyze this message for scam indicators. Return ONLY valid JSON:
+{"isScam":true,"confidence":87,"scamType":"IRS / Tax Scam","redFlags":["flag1","flag2","flag3"],"tactics":["tactic1","tactic2"],"explanation":"Brief explanation"}
+
+Message: ${text}` }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content || '';
+    const result = JSON.parse(raw.replace(/```json|```/g,'').trim());
+
+    const card = document.getElementById('resultCard');
+    const header = document.getElementById('resultHeader');
+    const body = document.getElementById('resultBody');
+
+    header.innerHTML = `
+      <span class="verdict-badge ${result.isScam ? 'verdict-scam' : 'verdict-safe'}">${result.isScam ? '⚠ Likely Scam' : '✓ Likely Legitimate'}</span>
+      <span class="confidence-pill">${result.confidence}% confidence</span>
+      ${result.scamType ? `<span class="scam-type-pill">${escHtml(result.scamType)}</span>` : ''}
+    `;
+
+    let flagsHtml = '';
+    if (result.redFlags && result.redFlags.length) {
+      flagsHtml = `<div class="result-section-title">Red Flags</div><div class="result-flags">
+        ${result.redFlags.map(f => `<div class="result-flag"><span style="color:var(--red);flex-shrink:0;">⚑</span>${escHtml(f)}</div>`).join('')}
+      </div>`;
+    }
+
+    let tacticsHtml = '';
+    if (result.tactics && result.tactics.length) {
+      tacticsHtml = `<div class="result-section-title">Tactics Detected</div><div class="result-tactics">
+        ${result.tactics.map(t => `<span class="result-tactic">${escHtml(t)}</span>`).join('')}
+      </div>`;
+    }
+
+    body.innerHTML = `
+      <div class="result-explanation">${escHtml(result.explanation || '')}</div>
+      ${flagsHtml}
+      ${tacticsHtml}
+    `;
+
+    card.style.display = 'block';
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  } catch(err) {
+    showToast('Analysis failed: ' + err.message);
+  }
+
+  btn.disabled = false; btn.classList.remove('loading');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>

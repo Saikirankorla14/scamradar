@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — ScamRadar</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/animations.css">
+<style>
+.about-layout { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+.about-layout h2 { font-family: var(--display); font-size: 28px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px; }
+.about-layout .subtitle { font-size: 15px; color: var(--text2); line-height: 1.6; margin-bottom: 2rem; }
+.warn-box { background: var(--red-dim); border: 1px solid rgba(232,64,64,0.25); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 13px; color: var(--text2); line-height: 1.7; }
+.warn-box strong { color: var(--red); }
+.section-title { font-family: var(--display); font-size: 18px; font-weight: 700; letter-spacing: -0.03em; margin: 2rem 0 1rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+.about-p { font-size: 14px; color: var(--text2); line-height: 1.75; margin-bottom: 1rem; }
+.stat-highlight { font-size: 24px; font-weight: 800; font-family: var(--display); color: var(--red); letter-spacing: -0.04em; }
+
+.scam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 1rem; }
+.scam-type-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.stc-icon { font-size: 22px; margin-bottom: 6px; }
+.stc-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.stc-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+.resources-list { display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; }
+.resource-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; text-decoration: none; color: var(--text2); transition: all 0.12s; }
+.resource-item:hover { color: var(--text); border-color: var(--border2); }
+.resource-item .ri-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.resource-item .ri-label { flex: 1; }
+.resource-item .ri-arrow { font-size: 12px; color: var(--text3); }
+
+.feature-list { display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; }
+.feature-item { display: flex; gap: 10px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text2); }
+.fi-check { color: var(--green); flex-shrink: 0; font-size: 16px; }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 13H2L8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><line x1="8" y1="6.5" x2="8" y2="9.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.7" fill="currentColor"/></svg>
+      </div>
+      <span class="logo-text">ScamRadar</span>
+      <span class="logo-badge">Educational</span>
+    </a>
+    <nav class="nav">
+      <a href="../index.html" class="nav-link">Generator</a>
+      <a href="analyze.html" class="nav-link">Analyze</a>
+      <a href="library.html" class="nav-link">Library</a>
+      <a href="about.html" class="nav-link active">About</a>
+    </nav>
+  </div>
+</header>
+
+<div class="about-layout">
+  <h2>About ScamRadar</h2>
+  <p class="subtitle">An AI-powered scam awareness training platform for education, research, and fraud prevention.</p>
+
+  <div class="warn-box">
+    <strong>⚠ Educational use only.</strong> ScamRadar generates fictional scam mockups solely to help people recognize real fraud. All generated content is clearly labeled as educational material and must never be used to deceive or defraud real people. Misuse is illegal and unethical.
+  </div>
+
+  <p class="about-p">Americans lost <span class="stat-highlight">$10B+</span> to fraud in 2023 according to the FTC. The most effective defense against scams is awareness — people who understand how scams work are significantly less likely to fall victim to them.</p>
+
+  <p class="about-p">ScamRadar uses AI to generate highly realistic scam conversation mockups across multiple formats (phone calls, SMS, emails, voicemails, and more), helping individuals, educators, and security researchers study the exact tactics scammers use without requiring exposure to real criminal content.</p>
+
+  <div class="section-title">Features</div>
+  <div class="feature-list">
+    <div class="feature-item"><span class="fi-check">✓</span><span><strong style="color:var(--text);">Generator</strong> — Create realistic scam mockups for 14 scam types across 6 delivery formats with adjustable pressure and target profiles</span></div>
+    <div class="feature-item"><span class="fi-check">✓</span><span><strong style="color:var(--text);">Analyzer</strong> — Paste any suspicious message and get AI-powered analysis of red flags, confidence scores, and scam type identification</span></div>
+    <div class="feature-item"><span class="fi-check">✓</span><span><strong style="color:var(--text);">Red flag detection</strong> — Every generated mockup comes with detailed explanations of the specific manipulation tactics used</span></div>
+    <div class="feature-item"><span class="fi-check">✓</span><span><strong style="color:var(--text);">Library</strong> — Save and organize generated mockups for training sessions and reference</span></div>
+    <div class="feature-item"><span class="fi-check">✓</span><span><strong style="color:var(--text);">History</strong> — Session history keeps your recent generations easily accessible</span></div>
+  </div>
+
+  <div class="section-title">Covered Scam Types</div>
+  <div class="scam-grid">
+    <div class="scam-type-card"><div class="stc-icon">🏛️</div><div class="stc-name">IRS / Tax Scam</div><div class="stc-desc">Fake agents threatening arrest for unpaid taxes</div></div>
+    <div class="scam-type-card"><div class="stc-icon">🏦</div><div class="stc-name">Bank Fraud Alert</div><div class="stc-desc">Impersonating banks to steal credentials</div></div>
+    <div class="scam-type-card"><div class="stc-icon">💻</div><div class="stc-name">Tech Support</div><div class="stc-desc">Fake virus alerts and remote access scams</div></div>
+    <div class="scam-type-card"><div class="stc-icon">🎰</div><div class="stc-name">Lottery / Prize</div><div class="stc-desc">Fake winnings with upfront fee demands</div></div>
+    <div class="scam-type-card"><div class="stc-icon">💌</div><div class="stc-name">Romance Scam</div><div class="stc-desc">Building fake relationships to extract money</div></div>
+    <div class="scam-type-card"><div class="stc-icon">🏥</div><div class="stc-name">Medicare / Insurance</div><div class="stc-desc">Fake benefits and insurance card scams</div></div>
+    <div class="scam-type-card"><div class="stc-icon">⚡</div><div class="stc-name">Utility Shutoff</div><div class="stc-desc">Pay now or lose power/water threats</div></div>
+    <div class="scam-type-card"><div class="stc-icon">👴</div><div class="stc-name">Grandparent Scam</div><div class="stc-desc">Fake emergencies exploiting family bonds</div></div>
+    <div class="scam-type-card"><div class="stc-icon">📦</div><div class="stc-name">Package Delivery</div><div class="stc-desc">Fake delivery notifications to steal info</div></div>
+    <div class="scam-type-card"><div class="stc-icon">🆔</div><div class="stc-name">Social Security</div><div class="stc-desc">SSN suspension and identity theft scams</div></div>
+    <div class="scam-type-card"><div class="stc-icon">₿</div><div class="stc-name">Crypto Investment</div><div class="stc-desc">Pig butchering and fake trading platforms</div></div>
+    <div class="scam-type-card"><div class="stc-icon">💼</div><div class="stc-name">Job Offer Scam</div><div class="stc-desc">Fake employment offers to steal info/money</div></div>
+    <div class="scam-type-card"><div class="stc-icon">🎣</div><div class="stc-name">Phishing Email</div><div class="stc-desc">Deceptive emails to harvest credentials</div></div>
+    <div class="scam-type-card"><div class="stc-icon">🎗️</div><div class="stc-name">Charity Scam</div><div class="stc-desc">Fake charities exploiting compassion</div></div>
+  </div>
+
+  <div class="section-title">Legitimate Resources</div>
+  <p class="about-p">If you've received a suspicious message or been victimized by a scam, contact these official agencies:</p>
+  <div class="resources-list">
+    <a href="https://reportfraud.ftc.gov" class="resource-item" target="_blank" rel="noopener">
+      <div class="ri-dot"></div>
+      <span class="ri-label"><strong>FTC Report Fraud</strong> — reportfraud.ftc.gov</span>
+      <span class="ri-arrow">↗</span>
+    </a>
+    <a href="https://www.ic3.gov" class="resource-item" target="_blank" rel="noopener">
+      <div class="ri-dot"></div>
+      <span class="ri-label"><strong>FBI Internet Crime Complaint Center (IC3)</strong> — ic3.gov</span>
+      <span class="ri-arrow">↗</span>
+    </a>
+    <a href="https://www.usa.gov/stop-scams-frauds" class="resource-item" target="_blank" rel="noopener">
+      <div class="ri-dot"></div>
+      <span class="ri-label"><strong>USA.gov Scam Reporting</strong> — usa.gov/stop-scams-frauds</span>
+      <span class="ri-arrow">↗</span>
+    </a>
+    <a href="https://www.aarp.org/money/scams-fraud/" class="resource-item" target="_blank" rel="noopener">
+      <div class="ri-dot"></div>
+      <span class="ri-label"><strong>AARP Fraud Resource Center</strong> — aarp.org/money/scams-fraud</span>
+      <span class="ri-arrow">↗</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>
