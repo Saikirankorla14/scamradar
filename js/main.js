@@ -98,10 +98,21 @@ async function generate() {
     document.getElementById("intensitySelect")?.value || "medium";
   const target = document.getElementById("targetSelect")?.value || "general";
 
-  // Check for key first
-  if (!API.getKey()) {
-    openKeyModal();
-    return;
+  // Check for key on local dev only
+  const isVercel =
+    window.location.hostname !== "localhost" &&
+    !window.location.hostname.startsWith("127.");
+  if (!isVercel) {
+    const localKey =
+      typeof CONFIG !== "undefined" &&
+      CONFIG.GROQ_API_KEY &&
+      CONFIG.GROQ_API_KEY !== "your_groq_api_key_here"
+        ? CONFIG.GROQ_API_KEY
+        : sessionStorage.getItem("groq_api_key") || "";
+    if (!localKey) {
+      openKeyModal();
+      return;
+    }
   }
 
   UI.setGenerating(true);
